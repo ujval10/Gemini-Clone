@@ -21,6 +21,10 @@ const ContextProvider = (props) => {
             .replace(/'/g, "&#039;");
     };
 
+    const newChat = () =>{
+        setLoading(false)
+        setShowResult(false)
+    }
     const onSent = async (prompt) => {
         setResultData("");
         setLoading(true);
@@ -44,38 +48,39 @@ const ContextProvider = (props) => {
 
         try {
             const response = await runChat(textToSend);
-
+        
             // Escape raw HTML first
             let safeResponse = escapeHtml(response);
-
+        
             // Apply lightweight formatting:
             // **bold** → <b>bold</b>
             safeResponse = safeResponse.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-
+        
             // Add line breaks before numbered lists like "1.", "2."
-            safeResponse = safeResponse.replace(/(^|\s)(\d\.)/g, "$1<br><br>$2");
-
+            safeResponse = safeResponse.replace(/(^|\n)(\d\.)\s/g, "$1<br><br>$2 ");
+        
             // Replace stray asterisks * with <br>
             safeResponse = safeResponse.replace(/\*/g, "<br>");
-
+        
             // Animate word by word
             let words = safeResponse.split(" ");
-
+        
             words.forEach((word, index) => {
                 setTimeout(() => {
                     setResultData((prev) => prev + word + " ");
                 }, index * 10); // 10 ms per word
             });
-
+        
             // Store response to historyData
             setHistoryData((prevHistory) => [
                 ...prevHistory,
                 { prompt: textToSend, response: safeResponse },
             ]);
-
+        
         } catch (error) {
             console.error("Error running chat:", error);
         }
+        
 
         setLoading(false);
         setInput("");
@@ -93,7 +98,8 @@ const ContextProvider = (props) => {
         resultData,
         input,
         setInput,
-        historyData, // Pass the history data to the context
+        historyData,
+        newChat   
     };
 
     return (
