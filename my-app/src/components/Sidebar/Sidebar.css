@@ -38,9 +38,10 @@
 .sidebar .recent-entry {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 20px 15px;
+    gap: 8px;
+    padding: 6px 10px;  /* smaller padding: 6px top/bottom, 10px left/right */
     width: 100%;
+    font-size: 14px;    /* optional: slightly smaller text */
 }
 
 .sidebar .recent-entry img {
